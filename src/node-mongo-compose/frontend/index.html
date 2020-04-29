@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Docker com Node e Mongo</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1 class="title">Cadastro Simples</h1>
+    </header>
+
+    <hr>
+
+    <div class="form">
+      <div class="form-group">
+        <input type="hidden" name="id">
+        <label for="name">Digite seu nome:</label>
+        <input class="form-control" name="name" id="name" type="text" placeholder="Ex: Fulano da Silva">
+      </div>
+      <button class="btn btn-success" save>Salvar</button>
+    </div>
+
+    <hr>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="clientRows"></tbody>
+    </table>
+  </main>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <script>
+    const API_URL = 'http://localhost:3000';
+
+    const createButton = (label, type) => {
+      return $('<button>').addClass(`btn btn-${ type }`).html(label);
+    };
+
+    const renderRows = (clients) => {
+      const rows = clients.map((client) => {
+        const updateButton = createButton('Atualizar', 'warning');
+        const removeButton = createButton('Excluir', 'danger');
+        removeButton.click(() => removeClient(client));
+        updateButton.click(() => loadClient(client));
+
+        return $('<tr>')
+          .append($('<td>').append(client.name))
+          .append($('<td>').append(updateButton).append(removeButton));
+      });
+
+      $('#clientRows').html(rows);
+    };
+    
+    const loadClient = (client) => {
+      $('[name=id]').val(client._id);
+      $('[name=name]').val(client.name);
+      $('[name=name]').focus()
+    }
+
+    const getClients = () => {
+      $.ajax({
+        url: `${ API_URL }/clients/`,
+        success: (clients) => {
+          renderRows(clients);
+          $('[name]').val('');
+        }
+      });
+    };
+
+    const removeClient = (client) => {
+      $.ajax({
+        method: 'DELETE',
+        url: `${ API_URL }/clients/${ client._id }`,
+        success: getClients
+      });
+    };
+
+    const saveClient = () => {
+      const _id = $('[name=id]').val();
+      const name = $('[name=name]').val();
+
+      $.ajax({
+        method: (_id) ? 'PUT' : 'POST',
+        url: `${ API_URL }/clients/${ _id }`,
+        data: (_id) ? { _id, name } : { name },
+        success: getClients
+      });
+    };
+
+    $(() => {
+      getClients();
+      $('[save]').click(saveClient);
+    });
+  </script>
+</body>
+</html>
