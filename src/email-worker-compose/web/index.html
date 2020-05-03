@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Docker com Email Worker</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1 class="title">Docker com Workers e E-mail</h1>
+    </header>
+
+    <hr>
+
+    <form action="http://localhost/api" method="POST" class="form">
+      <div class="form-group">
+        <input type="hidden" name="id">
+        <label for="assunto">Digite o assunto:</label>
+        <input class="form-control" name="assunto" id="assunto" type="text" placeholder="Ex: Tecnologia">
+      </div>
+
+      <div class="form-group">
+        <label for="mensagem">Digite a mensagem:</label>
+        <textarea class="form-control" name="mensagem" id="mensagem" placeholder="Ex: Olar, vem sempre aqui?"></textarea>
+      </div>
+      <button type="submit" class="btn btn-success" save>Salvar</button>
+    </form>
+  </main>
+  
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>
